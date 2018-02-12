@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      >
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title></title>
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <!-- Bootstrap 3.3.6 -->
+        <link rel="stylesheet" href="/basic/bootstrap/css/bootstrap.min.css">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+        <!-- DataTables -->
+        <link rel="stylesheet" href="/basic/plugins/datatables/dataTables.bootstrap.css">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="/basic/dist/css/AdminLTE.min.css">
+        <!-- AdminLTE Skins. Choose a skin from the css/skins
+             folder instead of downloading all of them to reduce the load. -->
+        <link rel="stylesheet" href="/basic/dist/css/skins/skin-green.min.css">
+
+        <!-- Place favicon.ico in the root directory -->
+        <!--<link href="/basic/dist/css/lsj/style.css" rel="stylesheet" type="text/css">-->
+        <!--[if IE 6]><link href="/basic/dist/css/lsj/ie6.css" rel="stylesheet" type="text/css"><![endif]-->
+        <!--[if IE 7]><link href="/basic/dist/css/lsj/ie7.css" rel="stylesheet" type="text/css"><![endif]-->
+<!--        <link rel="stylesheet" href="/basic/dist/css/lsj/normalize.css">
+        <link rel="stylesheet" href="/basic/dist/css/lsj/main.css">
+        <script src="/basic/js/vendor/modernizr-2.8.3.min.js"></script>-->
+    </head>
+<body class="hold-transition skin-blue layout-boxed">
+<!--<div th:fragment="content" th:remove="tag">-->
+<!-- Add your site or application content here -->
+<!--<div id="background">
+    <div id="page">
+        <div class="header">
+            <div class="footer">
+                <div class="body">
+                    <div id="sidebar"> <img id="logo" class="img-responsive center-block" src="/basic/dist/img/logo.png"  alt="水杯子">
+                        <div class="footenote"> <span>&copy; Copyright &copy; 2017.</span> <span>水杯子 all rights reserved</span></div>
+                    </div>
+                    <div id="content" > <img src="/basic/dist/img/cotton-flower.jpg">
+                        <div class="featured">
+                            <div class="header1">
+                                <ul style="position:absolute;padding-left: 0 ;margin-bottom: 0">
+                                    <li class="first"><img style="width: 100% ; height: auto;" src="/basic/dist/img/hi.jpg" class="img-responsive center-block" ></li>
+                                    <li class="last" >
+                                        <p style="margin:20% 15% 0 0">水杯子在线充值系统</p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="body">
+                                <div class="userInfo">
+                                             <span    style="text-align: left" >
+                                                 <p><strong style="font-size: 2.5vw ; color: black">用户:</strong>
+                                                     <a href="#" id="userID" style="font-size: 2.5vw ; color: black" th:name="${session.login_account.nickname}" >
+                                                         <span th:text="${session.login_account.nickname}" th:remove="tag"></span>
+                                                     </a>
+
+                                                 </p>
+
+                                             </span>
+                                    <span  style="text-align: left" >
+                                                &lt;!&ndash;<i><img src="/basic/dist/img/bg-page.jpg"  width="80%" height="2%"></i>&ndash;&gt;
+                                                 <p ><strong style="font-size: 2.5vw ; color:black">余额:</strong>
+
+                                                       <i  id="userMoney" style="font-size: 2.5vw ; color: black;">0.0</i>
+                                                       <a href="/account" id=button class="button"> 充值</a>
+                                                 </p>
+
+                                                    &lt;!&ndash;<i><img src="/basic/dist/img/bg-page.jpg" width="80%" height="2%"></i>&ndash;&gt;
+
+                                             </span>
+                                    <span  style="text-align: left">
+                                        <p>
+                                            <strong id="payInfo" style="font-size: 2.5vw ; color: #FFA960; font-family:楷体">测试</strong>
+                                        </p>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="shadow">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+    <div class="wrapper">
+
+        <!-- Main Header -->
+        <header class="main-header">
+
+            <!-- Logo -->
+            <a href="index2.html" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>水</b>杯子</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>Aqua</b>Cup</span>
+            </a>
+
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="/" style="font-family: 幼圆;color: #00a7d0;"><i class="fa fa-home"></i>首页</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
+
+
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="/basic/dist/img/whiteuser.jpg" class="img-circle" alt="User Image">
+                    </div>
+                    <div class="pull-left info">
+                        <p th:text="${session.login_account.nickname}"></p>
+                        <!-- Status -->
+                        <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
+                    </div>
+                </div>
+
+
+                <!-- Sidebar Menu -->
+                <ul class="sidebar-menu">
+                    <li class="header"></li>
+                    <!-- Optionally, you can add icons to the links -->
+                    <li class="active"><a href="#"><i class="glyphicon glyphicon-user"></i> <span>账户中心</span></a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-tags"></i> <span>我的卡包</span></a></li>
+                    <!--        <li class="treeview">
+                              <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
+                                <span class="pull-right-container">
+                                  <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                              </a>
+                              <ul class="treeview-menu">
+                                <li><a href="#">Link in level 2</a></li>
+                                <li><a href="#">Link in level 2</a></li>
+                              </ul>
+                            </li>-->
+                </ul>
+                <!-- /.sidebar-menu -->
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    水杯子
+                    <small>在线充值系统</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+                    <li class="active">用户信息</li>
+                </ol>
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="row" style="margin-top: 10%">
+                    <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
+
+                        <!-- Profile Image -->
+                        <div class="box box-primary">
+                            <div class="box-body box-profile">
+                                <img class="profile-user-img img-responsive img-circle" src="/basic/dist/img/whiteuser.jpg" alt="User profile picture">
+
+                                <h3 class="profile-username text-center" th:text="${session.login_account.nickname}"></h3>
+
+                                <p class="text-muted text-center">&nbsp;</p>
+                                <input id="userID" th:name="${session.login_account.email}" type="hidden">
+                                <div id="state1">
+                                    <ul class="list-group list-group-unbordered">
+                                    <li class="list-group-item">
+                                        <b>账号</b> <a  class="pull-right" th:name="${session.login_account.email}" th:text="${session.login_account.email}"></a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>卡号</b> <a id="userCard" class="pull-right">54446753</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>余额</b> <a id="userMoney" class="pull-right">0.0</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b id="payInfo"></b>
+                                        <b th:text="${cardstate}?${cardstate}"></b>
+                                    </li>
+                                </ul>
+
+                                    <a href="/account" class="btn btn-primary btn-block"><b>充值</b></a>
+                               </div>
+                               <div id="state0">
+                                    <ul class="list-group list-group-unbordered">
+                                        <li class="list-group-item">
+                                            <b>账号</b> <a class="pull-right" th:name="${session.login_account.email}" th:text="${session.login_account.email}"></a>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b th:text="${cardstate}?${cardstate}"> </b>
+                                        </li>
+                                    </ul>
+
+                                    <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#myModal"><b>绑定充值卡</b></a>
+
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+                        <!-- /.box -->
+                    </div>
+                </div>
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form action="/card/register" method="post" class="bs-example bs-example-form" >
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">绑定充值卡</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-xs-8 col-xs-offset-2">
+                                    <div class="input-group" style="margin-bottom: 20px">
+                                        <span class="input-group-addon">账号</span>
+                                        <input type="text" class="form-control" th:placeholder="${session.login_account.email}"  readonly>
+                                        <input type="hidden" name="username" th:value="${session.login_account.email}" readonly="readonly"/>
+                                    </div>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">卡号</span>
+                                        <input type="text" name="cardnumber" class="form-control" placeholder="请输入8位卡号" max="8" pattern="[0-9]{8}" title="请输入正确8位卡号" >
+                                    </div>
+                               </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                             <button  type="submit" class="btn btn-primary"  role="button">确认</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+
+
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <!-- To the right -->
+            <div class="pull-right hidden-xs">
+                <b>Version</b> 2.3.8
+            </div>
+            <!-- Default to the left -->
+            <strong>Copyright &copy; 2017 <a href="#">南京水杯子科技股份有限公司</a>.</strong> All rights reserved.
+        </footer>
+
+    </div>
+<!--</div>-->
+
+<!-- jQuery 2.2.3 -->
+<script src="/basic/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="/basic/bootstrap/js/bootstrap.min.js"></script>
+<!--<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>-->
+<!--<script>window.jQuery || document.write('<script src="/basic/js/vendor/jquery-1.12.0.min.js"><\/script>')</script>-->
+<script src="/basic/js/plugins.js"></script>
+<script src="/basic/js/main.js"></script>
+<!-- AdminLTE App -->
+<script src="/basic/dist/js/app.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var $userMoney=$("#userMoney");
+        var $payInfo=$("#payInfo");
+        var $userCard=$("#userCard");
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            url: "/userName/remain",
+            data: {"username":$("#userID").attr("name")},
+            dataType: 'json',
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                if(data.state=="1"){
+                    $("#state1").show();
+                    $("#state0").hide();
+                     $userMoney.empty();
+                     $userMoney.append(
+                     data.remain
+                      );
+                     $userCard.empty();
+                     $userCard.append(
+                     data.cardnumber
+                      );
+                    if(data.paystate=="2"){
+                        $payInfo.empty();
+                    }else if(data.paystate=="1"){
+                        $payInfo.empty();
+                        $payInfo.append("成功支付"+data.paymoney+"元");
+                    }else{
+                       $payInfo.empty();
+                       $payInfo.append("支付失败");}
+                }else{
+                    $("#state1").hide();
+                    $("#state0").show();
+                }
+             }
+        })
+    })
+</script>
+</body>
+</html>

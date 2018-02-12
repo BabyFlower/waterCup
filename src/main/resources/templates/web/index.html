@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="fragments/webModel">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="${session.baseConfig ne null ? session.baseConfig.name +' - 水杯子智慧净水物联网系统': ''}">水杯子智慧净水物联网系统</title>
+    <link type="text/css" rel="stylesheet" href="/web/web-page.css"/>
+    <script type="text/javascript" src="/basic/js-lib/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="/basic/bootstrap/js/bootstrap.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/basic/bootstrap/css/bootstrap.min.css"/>
+</head>
+<body>
+<!--<img th:src="@{/home-page.png}"/>-->
+<div   th:fragment="content" th:remove="tag">
+    <img src="/home-page.png" class="img-responsive center-block"/>
+</div>
+</body>
+</html>

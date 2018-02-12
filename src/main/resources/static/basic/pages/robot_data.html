@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html
+        lang="zh-CN"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>设备查询</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="/basic/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="/basic/plugins/datatables/dataTables.bootstrap.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/basic/dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="/basic/dist/css/skins/_all-skins.min.css">
+
+    <!-- shortcut icon -->
+    <link rel="shortcut icon" href="/basic/dist/img/avatar5.png" type="image/x-icon">
+
+    <!-- dropdown's style -->
+    <link type="text/css" rel="stylesheet" href="/basic/MCSS/common.css" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/basic/js/jquery.js"></script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+<div class="wrapper">
+
+    <header class="main-header">
+        <!-- Logo -->
+        <a href="http://localhost/admin" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><small>水杯子</small></span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b>水杯子</b>数据监控平台</span>
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="/basic/dist/img/whiteuser.jpg" class="user-image" alt="User Image">
+                            <span class="hidden-xs">超级管理员</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img src="/basic/dist/img/whiteuser.jpg" class="img-circle" alt="User Image">
+                                <p th:text="${session.login_user.nickname}">
+
+                                </p>
+                            </li>
+                            <!-- Menu Body -->
+                            <li class="user-body">
+                                <div class="row">
+                                </div>
+                                <!-- /.row -->
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat">修改密码</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="/logout" class="btn btn-default btn-flat">注销</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Control Sidebar Toggle Button -->
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu">
+                <li class="header">导航栏</li>
+
+
+
+                <li class="treeview">
+                    <a href="/basic/pages/robot_data.html">
+                        <i class="fa fa-pie-chart"></i>   <span>设备查询</span>
+                    </a>
+                </li>
+                <!-- add0000000000000000000000000000000000000000000000000000000 -->
+                <li class="treeview">
+                    <a href="/basic/pages/charts/flot.html">
+                        <i class="fa fa-pie-chart"></i>   <span>实时数据显示</span>
+                    </a>
+                </li>
+
+                <!--add11111111111111111111111111111111111111111111111111111111111111111111111-->
+                <li class="treeview">
+                    <a href="/basic/pages/tables/data.html">
+                        <i class="fa fa-pie-chart"></i> <span>历史数据查询</span>
+                    </a>
+                </li>
+                <!--add2222222222222222222222222222222222222222222222222222222222222222222222222222222222222-->
+                <li class="treeview">
+                    <a href="/basic/pages/alarm.html">
+                        <i class="fa fa-pie-chart"></i>   <span>参数报警</span>
+                    </a>
+                </li>
+                <!--add33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333-->
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i>   <span>设备状态控制</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li ><a href="#"><i class="fa fa-circle-o"></i> 运行模式</a></li>
+                        <li ><a href="#"><i class="fa fa-circle-o"></i> 工作时间</a></li>
+                    </ul>
+                </li>
+                <!--add44444444444444444444444444444444444444444444444444444444444444444444-->
+                <li class="treeview">
+                    <a href="/basic/pages/maintain.html">
+                        <i class="fa fa-pie-chart"></i>    <span>维护提示</span>
+                    </a>
+                </li>
+                <!--add555555555555555555555555555555555555555555555555555555555555555555555555555555-->
+                <li class="treeview">
+                    <a href="/basic/pages/pay/pay.html">
+                        <i class="fa fa-pie-chart"></i> <span>财务管理</span>
+                    </a>
+                </li>
+
+                <!--add function 2017-2-19 9:54-->
+            </ul>
+        </section>
+
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                设备查询
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+                <li><a href="#">设备查询</a></li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="lsdemo">
+                <h3>选择设备所在地</h3>
+                <div>
+                    <select id="dropdown1" ></select>
+                </div>
+                <div style="margin-top: 10px">
+                    <input type="button" title="显示该设备实时情况" value="确认" id="getValueArr2"/> 显示该设备实时情况
+                </div>
+                <script>
+                    $(document).ready(function(){
+
+                        window.search={};
+                        search["sid"]=1;
+                        search["did"]=1;
+                        search["draw"]=1;
+                        search["start"]=1;
+                        search["length"]=1;
+                        var opts = {
+                            ajax: '/api/sites?user=zyj',
+                            selStyle: 'margin-left: 3px;',
+                            select:  '#dropdown1',
+                            dataReader: {name: 'name'},
+                            level: 2
+                        };
+                        var linkageSel2 = new LinkageSel(opts);
+                        //districtData = opts = null;	// 如果数据量大最好在创建LinkageSel实例之后清空
+
+                        $('#getValueArr2').click(function() {
+                            var arr = linkageSel2.getSelectedArr();
+                            search["sid"]=arr[0];
+                            search["did"]=arr[1];
+                        });
+                    });
+                </script>
+            </div>
+            <!-- /.row -->
+
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <!-- interactive chart -->
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <i class="fa fa-bar-chart-o"></i>
+
+                            <h3 class="box-title">出水TDS实时数据</h3>
+
+                            <div class="box-tools pull-right">
+                                实时
+                                <div class="btn-group" id="realtime1" data-toggle="btn-toggle">
+                                    <button type="button" class="btn btn-default btn-xs active" data-toggle="on">开</button>
+                                    <button type="button" class="btn btn-default btn-xs" data-toggle="off">关</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div id="interactive" style="height: 300px;"></div>
+                        </div>
+                        <!-- /.box-body-->
+                    </div>
+                    <!-- /.box -->
+
+                </div>
+                <!-- /.col -->
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">实时数据显示</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="example2" class="table table-bordered table-hover">
+                                <thead>
+                                <tr >
+                                    <th >供水温度(℃)</th>
+                                    <th>供水压力(MPa)</th>
+                                    <th>进水流量(L/min)</th>
+                                    <th>出水流量(L/min)</th>
+                                    <th>进水TDS</th>
+                                    <th>出水TDS</th>
+                                    <th>PH值</th>
+                                    <th>压力(MPa)</th>
+                                    <th>余氯(mg/L)</th>
+                                    <th>余臭氧(mg/L)</th>
+                                    <th>浊度(NTU)</th>
+                                    <th>时间</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr id="table1">
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">历史数据查询</h3>
+                            <div class="box-tools pull-right">
+                                <div class="btn-group" id="realtime2">
+                                    <button type="button" class="btn btn-default btn-xs">刷新</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="example1" class="table table-bordered table-striped" style="width: 100%">
+                                <thead>
+                                <tr >
+                                    <th >供水温度(℃)</th>
+                                    <th>供水压力(MPa)</th>
+                                    <th>进水流量(L/min)</th>
+                                    <th>出水流量(L/min)</th>
+                                    <th>进水TDS</th>
+                                    <th>出水TDS</th>
+                                    <th>PH值</th>
+                                    <th>压力(MPa)</th>
+                                    <th>余氯(mg/L)</th>
+                                    <th>余臭氧(mg/L)</th>
+                                    <th>浊度(NTU)</th>
+                                    <th>时间</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th >供水温度(℃)</th>
+                                    <th>供水压力(MPa)</th>
+                                    <th>进水流量(L/min)</th>
+                                    <th>出水流量(L/min)</th>
+                                    <th>进水TDS</th>
+                                    <th>出水TDS</th>
+                                    <th>PH值</th>
+                                    <th>压力(MPa)</th>
+                                    <th>余氯(mg/L)</th>
+                                    <th>余臭氧(mg/L)</th>
+                                    <th>浊度(NTU)</th>
+                                    <th>时间</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+
+                <!-- /.col -->
+        </section>
+        <!-- /.content -->
+    </div>
+
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>版本</b> 1.0
+        </div>
+        <strong>Copyright &copy; 2016-2017 <a href="#">水杯子</a>.</strong> 版权所有
+    </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.2.3 -->
+<script src="/basic/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="/basic/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="/basic/plugins/datatables/jquery.dataTables.js"></script>
+<script src="/basic/plugins/datatables/dataTables.bootstrap.js"></script>
+<!-- SlimScroll -->
+<script src="/basic/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/basic/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="/basic/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/basic/dist/js/demo.js"></script>
+<!-- drop dowm -->
+<script src="/basic/js/comm.js"></script>
+<script src="/basic/js/linkagesel-min.js"></script>
+
+<script src="/basic/js/district-all.js"></script>
+<script src="/basic/js/district-level1.js"></script>
+<!-- FLOT CHARTS -->
+<script src="../plugins/flot/jquery.flot.min.js"></script>
+<script src="../plugins/flot/jquery.flot.time.js"></script>
+<!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
+<script src="../plugins/flot/jquery.flot.resize.min.js"></script>
+<!-- page script -->
+
+
+<!--实时数据图显示-->
+<script>
+    $(function () {
+        /*
+         * Flot Interactive Chart
+         * -----------------------
+         */
+        // We use an inline data source in the example, usually data would
+        // be fetched from a server
+
+        function gd(year, month, day,hours,minutes,seconds) {
+            return new Date(year, month - 1, day,hours+8,minutes,seconds).getTime();
+        }
+        var totalPoints = 10;
+        var res = [];
+        function getData() {
+            var sentem;
+            var suwd;
+            var y;
+            var m;
+            var d;
+            var h;
+            var minu;
+            var ss;
+            var jstds;
+            var cstds;
+         $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: "/datas/table3",
+                data: {"draw":search.draw,"length":totalPoints,"start":search.start,"sid":search.sid,"did":search.did},
+                dataType: 'json',
+                cache: false,
+                timeout: 600000,
+                 async: false,
+                success:function(data){
+                  $.each(data,function(index,item){
+                       sentem=item.sentem;
+                      suwd=item.suwd;
+                      jstds=item.jstds;
+                       cstds=item.cstds;
+                       y=parseInt(sentem.substr(0,4));
+                       m=parseInt(sentem.substr(4,2));
+                       d=parseInt(sentem.substr(6,2));
+                       h=parseInt(sentem.substr(8,2));
+                       minu=parseInt(sentem.substr(10,2));
+                       ss=parseInt(sentem.substr(12,2));
+                       res.push([gd(y,m,d,h,minu,ss),cstds]);
+                       });
+                },
+                error: function () {
+                    setTimeout(getData, 5000);
+                }
+            });
+           return res;
+        }
+       // var  interactive_plot=
+         /*   $.plot("#interactive", [getData()], {
+            grid: {
+                borderColor: "#f3f3f3",
+                borderWidth: 1,
+                tickColor: "#f3f3f3"
+            },
+            series: {
+                shadowSize: 0, // Drawing is faster without shadows
+                color: "#3c8dbc"
+            },
+            lines: {
+                fill: true, //Converts the line chart to area chart
+                color: "#3c8dbc"
+            },
+            yaxis: {
+                min: 0,
+                max: 100,
+                show: true
+            },
+            xaxis: {
+                show: true,
+                mode: 'time',
+                timeformat: "%Y/%m/%d-%H:%M"
+            }
+        });*/
+        function update() {
+           // interactive_plot.setData([getData()]);
+          //  interactive_plot.draw();
+            $.plot("#interactive", [getData()], {
+                grid: {
+                    borderColor: "#f3f3f3",
+                    borderWidth: 1,
+                    tickColor: "#f3f3f3"
+                },
+                series: {
+                    shadowSize: 0, // Drawing is faster without shadows
+                    color: "#3c8dbc"
+                },
+                lines: {
+                    //fill: true, //Converts the line chart to area chart
+                    color: "#3c8dbc"
+                },
+                legend: {
+                    noColumns: 2,
+                    labelBoxBorderColor: "#858585",
+                    position: "nw"
+                },
+                yaxis: {
+                    min: 0,
+                    max: 50,
+                    show: true
+                },
+                xaxis: {
+                    show: true,
+                    mode: 'time',
+                    timeformat: "%Y/%m/%d-%H:%M:%S"
+                }
+            });
+            res.splice(0,res.length);
+            if(realtime=="on")
+               setTimeout(update,1000);
+        }
+        var realtime = "on"; //If == to on then fetch data every x seconds. else stop fetching
+        if (realtime === "on") {
+            update();
+        }
+        //REALTIME TOGGLE
+        $("#realtime .btn").click(function () {
+            if ($(this).data("toggle") === "on") {
+                realtime = "on";
+            }
+            else {
+                realtime = "off";
+            }
+            update();
+        });
+        /*
+         * END INTERACTIVE CHART
+         */
+    })
+</script>
+<!--历史数据与实时数据表格显示脚本-->
+<script>
+    $(function () {
+        var table2= $("#example1").DataTable({
+            "sScrollX":1200,
+            "language" :{
+                url: "/js/jquery.dataTables.chinese.json"
+            },
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url: "/datas/table2",
+                data: {"did":search.did,"sid":search.sid}
+            },
+            "columns" : [
+                {"data":"suwd"},
+                {"data":"suyl"},
+                {"data" : "jsll"},
+                {"data" : "csll"},
+                {"data" : "jstds"},
+                {"data" : "cstds"},
+                {"data" : "ph"},
+                {"data" : "yl"},
+                {"data" : "ylv"},
+                {"data" : "ycy"},
+                {"data" : "zd"},
+                {"data" : "sentem"}
+            ],
+            "autoWidth": true,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": false
+
+        });
+        function reloadTable() {
+            var param = {
+                "did": search.did,
+                "sid": search.sid
+            };
+            table2.settings()[0].ajax.data = param;
+            table2.ajax.reload();
+        }
+        $('#example2').DataTable({
+            "sScrollX":1200,
+            "language" :{
+                url: "/js/jquery.dataTables.chinese.json"
+            },
+            "paging": false,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": false,
+            "info": false,
+            "autoWidth": true
+        });
+         table1();
+        $('#getValueArr2').click(function() {
+         reloadTable();
+        });
+        $('#realtime2').click(function() {
+            reloadTable();
+        });
+    });
+    function table1(){
+        var $table1=$("#table1");
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            url: "/datas/table1",
+            data: search,
+            dataType: 'json',
+            cache: false,
+            timeout: 600000,
+            success:function(data){
+                $.each(data,function(index,item){
+                    $table1.empty();
+                    $table1.append(
+                        "<td>" + item.suwd+ "</td>" +
+                        "<td>" + item.suyl + "</td>"+
+                        "<td>" + item.jsll + "</td>"+
+                        "<td>" + item.csll + "</td>"+
+                        "<td>" + item.jstds + "</td>"+
+                        "<td>" + item.cstds + "</td>"+
+                        "<td>" + item.ph + "</td>"+
+                        "<td>" + item.yl + "</td>"+
+                        "<td>" + item.ylv + "</td>"+
+                        "<td>" + item.ycy + "</td>"+
+                        "<td>" + item.zd + "</td>"+
+                        "<td>" + item.sentem + "</td>"
+                    );
+                })
+            }
+        });
+        meter1=setTimeout('table1()', 5000);
+    }
+
+</script>
+
+
+</body>
+</html>

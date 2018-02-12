@@ -1,0 +1,9 @@
+#page .header .footer .body #sidebar .connect a{
+	_margin:10px 5px 0 5px;
+}
+#page .header .footer .body #content .featured{
+	_margin:-473px 0 30px 32px;
+}
+#page .header .footer .body #content .featured .body{
+	_top:-88px;
+}

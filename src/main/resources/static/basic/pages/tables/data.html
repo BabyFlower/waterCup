@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>历史数据查询</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="/basic/bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/basic/plugins/datatables/dataTables.bootstrap.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/basic/dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="/basic/dist/css/skins/_all-skins.min.css">
+
+  <!-- shortcut icon -->
+  <link rel="shortcut icon" href="/basic/dist/img/avatar5.png" type="image/x-icon">
+
+  <!-- dropdown's style -->
+  <link type="text/css" rel="stylesheet" href="/basic/MCSS/common.css" />
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <script src="/basic/js/jquery.js"></script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="http://localhost/admin" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><small>水杯子</small></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>水杯子</b>数据监控平台</span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!--头提示-->
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="/basic/dist/img/whiteuser.jpg" class="user-image" alt="User Image">
+              <span class="hidden-xs">超级管理员</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+                <img src="/basic/dist/img/whiteuser.jpg" class="img-circle" alt="User Image">
+                <p>
+                  超级管理员
+                </p>
+              </li>
+              <!-- Menu Body -->
+              <li class="user-body">
+                <div class="row">
+                </div>
+                <!-- /.row -->
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                  <a href="#" class="btn btn-default btn-flat">修改密码</a>
+                </div>
+                <div class="pull-right">
+                  <a href="/logout" class="btn btn-default btn-flat">注销</a>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <!-- Control Sidebar Toggle Button -->
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <!-- Sidebar user panel -->
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu">
+        <li class="header">导航栏</li>
+
+        <li class="treeview">
+          <a href="/basic/pages/robot_data.html">
+            <i class="fa fa-pie-chart"></i>   <span>设备查询</span>
+          </a>
+        </li>
+
+        <li class="treeview">
+          <a href="/basic/pages/charts/flot.html">
+            <i class="fa fa-pie-chart"></i>   <span>实时数据显示</span>
+          </a>
+        </li>
+
+        <!--add11111111111111111111111111111111111111111111111111111111111111111111111-->
+        <li class="treeview">
+          <a href="/basic/pages/tables/data.html">
+            <i class="fa fa-pie-chart"></i> <span>历史数据查询</span>
+          </a>
+        </li>
+        <!--add2222222222222222222222222222222222222222222222222222222222222222222222222222222222222-->
+        <li class="treeview">
+          <a href="/basic/pages/alarm.html">
+            <i class="fa fa-pie-chart"></i>   <span>参数报警</span>
+          </a>
+        </li>
+        <!--add33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333-->
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-pie-chart"></i>   <span>设备状态控制</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li ><a href="#"><i class="fa fa-circle-o"></i> 运行模式</a></li>
+            <li ><a href="#"><i class="fa fa-circle-o"></i> 工作时间</a></li>
+          </ul>
+        </li>
+        <!--add44444444444444444444444444444444444444444444444444444444444444444444-->
+        <li class="treeview">
+          <a href="/basic/pages/maintain.html">
+            <i class="fa fa-pie-chart"></i>    <span>维护提示</span>
+          </a>
+        </li>
+        <!--add555555555555555555555555555555555555555555555555555555555555555555555555555555-->
+        <li class="treeview">
+          <a href="/basic/pages/pay/pay.html">
+            <i class="fa fa-pie-chart"></i> <span>财务管理</span>
+          </a>
+        </li>
+
+
+        <!--add function 2017-2-19 9:54-->
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+      历史数据
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li><a href="#">历史数据</a></li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="lsdemo">
+        <h3>选择设备所在地</h3>
+        <div>
+          <select id="dropdown1" ></select>
+        </div>
+        <div style="margin-top: 10px">
+          <input type="button" title="显示该设备实时情况" value="确认" id="getValueArr2"/> 显示该设备所有历史数据
+        </div>
+        <script>
+            $(document).ready(function(){
+
+                window.search={};
+                search["sid"]=1;
+                search["did"]=1;
+                search["draw"]=1;
+                search["start"]=1;
+                search["length"]=1;
+                var opts = {
+                    ajax: '/api/sites',
+                    selStyle: 'margin-left: 3px;',
+                    select:  '#dropdown1',
+                    dataReader: {name: 'name'},
+                    level: 2
+                };
+                var linkageSel2 = new LinkageSel(opts);
+                //districtData = opts = null;	// 如果数据量大最好在创建LinkageSel实例之后清空
+
+                $('#getValueArr2').click(function() {
+                    var arr = linkageSel2.getSelectedArr();
+                    search["sid"]=arr[0];
+                    search["did"]=arr[1];
+                });
+            });
+        </script>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">数据表</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example1" class="table table-bordered table-hover">
+                <thead>
+                <tr >
+                  <th >供水温度(℃)</th>
+                  <th>供水压力(MPa)</th>
+                  <th>进水流量(L/min)</th>
+                  <th>出水流量(L/min)</th>
+                  <th>进水TDS</th>
+                  <th>出水TDS</th>
+                  <th>PH值</th>
+                  <th>压力(MPa)</th>
+                  <th>余氯(mg/L)</th>
+                  <th>余臭氧(mg/L)</th>
+                  <th>浊度(NTU)</th>
+                  <th>时间</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                  <th >供水温度(℃)</th>
+                  <th>供水压力(MPa)</th>
+                  <th>净水流量(L/min)</th>
+                  <th>进水TDS</th>
+                  <th>出水TDS</th>
+                  <th>PH值</th>
+                  <th>压力(MPa)</th>
+                  <th>余氯(mg/L)</th>
+                  <th>余臭氧(mg/L)</th>
+                  <th>浊度(NTU)</th>
+                  <th>时间</th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>版本</b> 1.0
+    </div>
+    <strong>Copyright &copy; 2016-2017 <a href="#">水杯子</a>.</strong> 版权所有
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.2.3 -->
+<script src="/basic/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="/basic/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="/basic/plugins/datatables/jquery.dataTables.js"></script>
+<script src="/basic/plugins/datatables/dataTables.bootstrap.js"></script>
+<!-- SlimScroll -->
+<script src="/basic/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/basic/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="/basic/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/basic/dist/js/demo.js"></script>
+<!-- drop dowm -->
+<script src="/basic/js/comm.js"></script>
+<script src="/basic/js/linkagesel-min.js"></script>
+
+<!-- page script -->
+<script>
+  $(function () {
+      var table2= $("#example1").DataTable({
+          "processing": true,
+          "serverSide": true,
+          "ajax": {
+              url: "/datas/table2",
+              data: {"did":search.did,"sid":search.sid}
+          },
+          "columns" : [
+              {"data":"suwd"},
+              {"data":"suyl"},
+              {"data" : "jsll"},
+              {"data" : "csll"},
+              {"data" : "jstds"},
+              {"data" : "cstds"},
+              {"data" : "ph"},
+              {"data" : "yl"},
+              {"data" : "ylv"},
+              {"data" : "ycy"},
+              {"data" : "zd"},
+              {"data" : "sentem"}
+          ],
+          "autoWidth": true,
+          "lengthChange": true,
+          "searching": false,
+          "ordering": false,
+          "sScrollX":1200
+      });
+      function reloadTable() {
+          var param = {
+              "did": search.did,
+              "sid": search.sid
+          };
+          table2.settings()[0].ajax.data = param;
+          table2.ajax.reload();
+      }
+      $('#getValueArr2').click(function() {
+          reloadTable();
+      });
+  });
+</script>
+</body>
+</html>
