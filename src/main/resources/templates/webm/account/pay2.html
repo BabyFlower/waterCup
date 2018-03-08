@@ -154,8 +154,8 @@
                                   <!-- /.col -->
                                   <div class="col-sm-4 border-right">
                                       <div class="description-block">
-                                          <h5 class="description-header">13,002350</h5>
-                                          <span class="description-text">卡号</span>
+                                          <h5 class="description-header" id="userCard"></h5>
+                                          <span class="description-text" >卡号</span>
                                       </div>
                                       <!-- /.description-block -->
                                   </div>
@@ -203,7 +203,7 @@
                       </span>
                                           <input  type="text" class="form-control" placeholder="其他金额"  name="input"  max="8" pattern="^[0-9]+(\.[0-9]{2})?$" title="请输入正确金额"/>
                                       </div><!-- /input-group -->
-                                  </div><!-- /.col-lg-6 -->
+                                  </div>
                                   <!-- 充值方式 -->
                                   <div>
                                       <h4 class="box-title">充值方式</h4>
@@ -215,14 +215,14 @@
                                           <input type="radio" class="flat-red" name="method"  value="weixin" >
                                       </label></div>
                                   <div class="col-lg-6 col-md-6 col-sm-6 col-sm-offset-2 col-xs-10" >
-                                      <img  style="width: 100px;border: 3px solid #d2d6de;" class="img-responsive" src="/basic/dist/img/WePayLogo.png" alt="微信"/>
+                                      <img  style="width: 100px;height: 30px;border: 3px solid #d2d6de;" class="img-responsive" src="/basic/dist/img/WePayLogo.png" alt="微信"/>
                                   </div>
                                   <div class="col-lg-1 col-lg-offset-2 col-md-1 col-md-offset-2 col-sm-1 col-sm-offset-2 col-xs-2 ">
                                       <label>
                                           <input type="radio" class="flat-red" name="method"  value="zhifubao">
                                       </label></div>
                                   <div class="col-lg-6 col-md-6 col-sm-6 col-sm-offset-2 col-xs-10">
-                                      <img style="width: 100px;border: 3px solid #d2d6de;" class="img-responsive" src="/basic/dist/img/ZhiFuBaoLogo.png" alt="支付宝"/>
+                                      <img style="width: 100px;height: 30px;border: 3px solid #d2d6de;" class="img-responsive" src="/basic/dist/img/ZhiFuBaoLogo.png" alt="支付宝"/>
                                   </div>
 
                                   <!--充值方式-->
@@ -293,17 +293,20 @@
 <script src="/basic/dist/js/app.min.js"></script>
 
 <script>
-    $('#myModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget) // Button that triggered the modal
-        var modal = $(this)
-    $('#id_iframe').load(function() {
-        var text = $(this).contents().find("body").text();
-        // 根据后台返回值处理结果
-        var url = text.toString();
-        modal.find('.modal-body').empty();
-        modal.find('.modal-body').qrcode({width: 210, height: 210, correctLevel: 0, text: url});
+    $(document).ready(function () {
+        $('#myModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var modal = $(this)
+            $('#id_iframe').load(function() {
+                var text = $(this).contents().find("body").text();
+                // 根据后台返回值处理结果
+                var url = text.toString();
+                modal.find('.modal-body').empty();
+                modal.find('.modal-body').qrcode({width: 210, height: 210, correctLevel: 0, text: url});
+            })
         })
     })
+
 </script>
   <!-- Page script -->
   <script>
@@ -322,6 +325,7 @@
   <script>
       $(document).ready(function () {
           var $userMoney=$("#userMoney");
+          var $userCard=$("#userCard");
           $.ajax({
               type: "GET",
               contentType: "application/json",
@@ -334,6 +338,10 @@
                   $userMoney.empty();
                   $userMoney.append(
                       data.remain
+                  );
+                  $userCard.empty();
+                  $userCard.append(
+                      data.cardnumber
                   );
                   }
               })

@@ -44,7 +44,7 @@
 
     <header class="main-header">
         <!-- Logo -->
-        <a href="http://localhost/admin" class="logo">
+        <a href="/admin" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><small>水杯子</small></span>
             <!-- logo for regular state and mobile devices -->
@@ -64,13 +64,13 @@
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <img src="/basic/dist/img/whiteuser.jpg" class="user-image" alt="User Image">
-                            <span class="hidden-xs">超级管理员</span>
+                            <span class="hidden-xs" th:text="${session.login_user.getIsAdmin()==1?'超级管理员':'管理员'}"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
                                 <img src="/basic/dist/img/whiteuser.jpg" class="img-circle" alt="User Image">
-                                <p id="username" th:text="${session.login_user.nickname}" th:name="${session.login_user.username}" >
+                                <p id="username" th:name="${session.login_user.getUsername()}" th:text="${session.login_user.getUsername()}">
 
                                 </p>
                             </li>
@@ -112,10 +112,33 @@
                     </a>
                 </li>
 
+
                 <li class="treeview">
-                    <a href="/basic/flot">
-                        <i class="fa fa-pie-chart"></i>   <span>实时数据显示</span>
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i> <span>设备管理</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                            </span>
                     </a>
+                    <ul class="treeview-menu">
+                        <li ><a href="/basic/siteinfo"><i class="fa fa-circle-o"></i> 站点查询</a></li>
+                        <li ><a  th:href="${session.login_user.getIsAdmin()==1?'/basic/addsite':'#'}"><i class="fa fa-circle-o"></i> 站点添加</a></li>
+                    </ul>
+                </li>
+
+                <li class="treeview" >
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i> <span>用户管理</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li ><a href="/basic/userinfo"><i class="fa fa-circle-o"></i> 用户查询</a></li>
+                        <li th:style="${session.login_user.getIsAdmin()==1?'':'display:none'}">
+                            <a th:href="${session.login_user.getIsAdmin()==1?'/basic/adduser':'#'}">
+                                <i class="fa fa-circle-o"></i> 用户添加</a></li>
+                    </ul>
                 </li>
 
                 <!--add11111111111111111111111111111111111111111111111111111111111111111111111-->
@@ -131,7 +154,7 @@
                     </a>
                 </li>
                 <!--add33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333-->
-                <li class="treeview">
+<!--                <li class="treeview">
                     <a href="#">
                         <i class="fa fa-pie-chart"></i>   <span>设备状态控制</span>
                         <span class="pull-right-container">
@@ -142,7 +165,7 @@
                         <li ><a href="#"><i class="fa fa-circle-o"></i> 运行模式</a></li>
                         <li ><a href="#"><i class="fa fa-circle-o"></i> 工作时间</a></li>
                     </ul>
-                </li>
+                </li>-->
                 <!--add44444444444444444444444444444444444444444444444444444444444444444444-->
                 <li class="treeview">
                     <a href="/basic/maintain">
@@ -170,7 +193,7 @@
                 设备查询
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+                <li><a href="/admin"><i class="fa fa-dashboard"></i> 主页</a></li>
                 <li><a href="#">设备查询</a></li>
             </ol>
         </section>
@@ -189,8 +212,8 @@
                     $(document).ready(function(){
 
                         window.search={};
-                        search["sid"]=1;
-                        search["did"]=1;
+                        search["sid"]=0;
+                        search["did"]=0;
                         search["draw"]=1;
                         search["start"]=1;
                         search["length"]=1;
@@ -250,39 +273,41 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="example2" class="table table-bordered table-hover">
+                            <table id="example2" class="table table-bordered table-hover"  style="width: 100%">
                                 <thead>
                                 <tr >
+                                    <th>#</th>
                                     <th >供水温度(℃)</th>
                                     <th>供水压力(MPa)</th>
-                                    <th>进水流量(L/min)</th>
+                                    <th>出水压力(MPa)</th>
                                     <th>出水流量(L/min)</th>
                                     <th>进水TDS</th>
                                     <th>出水TDS</th>
                                     <th>PH值</th>
-                                    <th>压力(MPa)</th>
+                                    <th>进水压力(MPa)</th>
                                     <th>余氯(mg/L)</th>
                                     <th>余臭氧(mg/L)</th>
                                     <th>浊度(NTU)</th>
                                     <th>时间</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr id="table1">
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
+                               <!-- <tbody>
+                                <tr th:each="realtime:${realtime}">
+                                    <th th:text="${realtime}==null?'':${realtime.suwd}"></th>
+                                    <th th:text="${realtime}==null?'':${realtime.suwd}"></th>
+                                    <th th:text="${realtime}==null?'':${realtime.suwd}"></th>
+                                    <th th:text="${realtime}==null?'':${realtime.suwd}"></th>
+                                    <th th:text="${realtime}==null?'':${realtime.suwd}"></th>
+                                    <th th:text="${realtime}==null?'':${realtime.suwd}"></th>
+                                    <th th:text="${realtime}==null?'':${realtime.suwd}"></th>
+                                    <th th:text="${realtime}==null?'':${realtime.suwd}"></th>
+                                    <th th:text="${realtime}==null?'':${realtime.suwd}"></th>
+                                    <th th:text="${realtime}==null?'':${realtime.suwd}"></th>
+                                    <th th:text="${realtime}==null?'':${realtime.suwd}"></th>
+                                    <th th:text="${realtime}==null?'':${realtime.suwd}"></th>
                                 </tr>
-                                </tbody>
+
+                                </tbody>-->
                             </table>
                         </div>
                         <!-- /.box-body -->
@@ -303,14 +328,15 @@
                             <table id="example1" class="table table-bordered table-striped" style="width: 100%">
                                 <thead>
                                 <tr >
+                                    <th>#</th>
                                     <th >供水温度(℃)</th>
                                     <th>供水压力(MPa)</th>
-                                    <th>进水流量(L/min)</th>
+                                    <th>出水压力(MPa)</th>
                                     <th>出水流量(L/min)</th>
                                     <th>进水TDS</th>
                                     <th>出水TDS</th>
                                     <th>PH值</th>
-                                    <th>压力(MPa)</th>
+                                    <th>进水压力(MPa)</th>
                                     <th>余氯(mg/L)</th>
                                     <th>余臭氧(mg/L)</th>
                                     <th>浊度(NTU)</th>
@@ -319,14 +345,15 @@
                                 </thead>
                                 <tfoot>
                                 <tr>
+                                    <th>#</th>
                                     <th >供水温度(℃)</th>
                                     <th>供水压力(MPa)</th>
-                                    <th>进水流量(L/min)</th>
+                                    <th>出水压力(MPa)</th>
                                     <th>出水流量(L/min)</th>
                                     <th>进水TDS</th>
                                     <th>出水TDS</th>
                                     <th>PH值</th>
-                                    <th>压力(MPa)</th>
+                                    <th>进水压力(MPa)</th>
                                     <th>余氯(mg/L)</th>
                                     <th>余臭氧(mg/L)</th>
                                     <th>浊度(NTU)</th>
@@ -444,35 +471,9 @@
             });
            return res;
         }
-       // var  interactive_plot=
-         /*   $.plot("#interactive", [getData()], {
-            grid: {
-                borderColor: "#f3f3f3",
-                borderWidth: 1,
-                tickColor: "#f3f3f3"
-            },
-            series: {
-                shadowSize: 0, // Drawing is faster without shadows
-                color: "#3c8dbc"
-            },
-            lines: {
-                fill: true, //Converts the line chart to area chart
-                color: "#3c8dbc"
-            },
-            yaxis: {
-                min: 0,
-                max: 100,
-                show: true
-            },
-            xaxis: {
-                show: true,
-                mode: 'time',
-                timeformat: "%Y/%m/%d-%H:%M"
-            }
-        });*/
+
         function update() {
-           // interactive_plot.setData([getData()]);
-          //  interactive_plot.draw();
+
             $.plot("#interactive", [getData()], {
                 grid: {
                     borderColor: "#f3f3f3",
@@ -505,7 +506,7 @@
             });
             res.splice(0,res.length);
             if(realtime=="on")
-               setTimeout(update,1000);
+               setTimeout(update,2000);
         }
         var realtime = "on"; //If == to on then fetch data every x seconds. else stop fetching
         if (realtime === "on") {
@@ -532,7 +533,30 @@
         var table2= $("#example1").DataTable({
             "sScrollX":1200,
             "language" :{
-                url: "/js/jquery.dataTables.chinese.json"
+                url: "/basic/js/jquery.dataTables.chinese.json"
+            },
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url: "/datas/table1",
+                data: {"did":search.did,"sid":search.sid}
+            },
+            "autoWidth": true,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": false,
+            "columnDefs":[
+                {
+                    visible: false,
+                    targets: 0
+                }
+            ]
+
+        });
+        var table1= $("#example2").DataTable({
+            "sScrollX":1200,
+            "language" :{
+                url: "/basic/js/jquery.dataTables.chinese.json"
             },
             "processing": true,
             "serverSide": true,
@@ -540,24 +564,18 @@
                 url: "/datas/table2",
                 data: {"did":search.did,"sid":search.sid}
             },
-            "columns" : [
-                {"data":"suwd"},
-                {"data":"suyl"},
-                {"data" : "jsll"},
-                {"data" : "csll"},
-                {"data" : "jstds"},
-                {"data" : "cstds"},
-                {"data" : "ph"},
-                {"data" : "yl"},
-                {"data" : "ylv"},
-                {"data" : "ycy"},
-                {"data" : "zd"},
-                {"data" : "sentem"}
-            ],
             "autoWidth": true,
-            "lengthChange": true,
+            "lengthChange":false,
             "searching": false,
-            "ordering": false
+            "ordering": false,
+            "paging": false,
+            "info": false,
+            "columnDefs":[
+                {
+                    visible: false,
+                    targets: 0
+                }
+            ]
 
         });
         function reloadTable() {
@@ -568,58 +586,27 @@
             table2.settings()[0].ajax.data = param;
             table2.ajax.reload();
         }
-        $('#example2').DataTable({
-            "sScrollX":1200,
-            "language" :{
-                url: "/js/jquery.dataTables.chinese.json"
-            },
-            "paging": false,
-            "lengthChange": true,
-            "searching": false,
-            "ordering": false,
-            "info": false,
-            "autoWidth": true
-        });
-         table1();
+        function table1flash(){
+            var param = {
+                "did": search.did,
+                "sid": search.sid
+            };
+            table1.settings()[0].ajax.data = param;
+            table1.ajax.reload();
+            meter1=setTimeout(table1flash, 5000);
+        }
         $('#getValueArr2').click(function() {
-         reloadTable();
+            reloadTable();
+            table1flash();
         });
         $('#realtime2').click(function() {
             reloadTable();
         });
+
+
+
     });
-    function table1(){
-        var $table1=$("#table1");
-        $.ajax({
-            type: "GET",
-            contentType: "application/json",
-            url: "/datas/table1",
-            data: search,
-            dataType: 'json',
-            cache: false,
-            timeout: 600000,
-            success:function(data){
-                $.each(data,function(index,item){
-                    $table1.empty();
-                    $table1.append(
-                        "<td>" + item.suwd+ "</td>" +
-                        "<td>" + item.suyl + "</td>"+
-                        "<td>" + item.jsll + "</td>"+
-                        "<td>" + item.csll + "</td>"+
-                        "<td>" + item.jstds + "</td>"+
-                        "<td>" + item.cstds + "</td>"+
-                        "<td>" + item.ph + "</td>"+
-                        "<td>" + item.yl + "</td>"+
-                        "<td>" + item.ylv + "</td>"+
-                        "<td>" + item.ycy + "</td>"+
-                        "<td>" + item.zd + "</td>"+
-                        "<td>" + item.sentem + "</td>"
-                    );
-                })
-            }
-        });
-        meter1=setTimeout('table1()', 5000);
-    }
+
 
 </script>
 

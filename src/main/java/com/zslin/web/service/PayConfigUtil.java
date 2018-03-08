@@ -11,7 +11,9 @@ public class PayConfigUtil {
     public static String API_KEY = "njsbz2abcdefghijklmnopqrstuvwxyz";  //商业支付密钥
     /*相关接口，回调地址*/
     public static String UFDODER_URL="https://api.mch.weixin.qq.com/pay/unifiedorder";//微信统一下单接口地址
-    public static String NOTIFY_URL="http://122.112.224.166:8090/notify/back";//支付结果回调地址
-    public static String CREATE_IP="122.112.224.166";//发起支付终端IP
+    public static String NOTIFY_URL="http://106.14.149.28:8090/notify/back";//支付结果回调地址
+    public static String CREATE_IP="106.14.149.28";//发起支付终端IP
+
+    /*微信app*/
 
 }

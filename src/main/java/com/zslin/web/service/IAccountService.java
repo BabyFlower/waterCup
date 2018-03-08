@@ -18,5 +18,6 @@ public interface IAccountService extends JpaRepository<Account, Integer>, JpaSpe
     /** 通过邮箱获取对象 */
     Account findByEmail(String email);
     Account findByNickname(String nickname);
-
+    @Query("SELECT COUNT(*) FROM Account")
+    Integer usernumber();
  }

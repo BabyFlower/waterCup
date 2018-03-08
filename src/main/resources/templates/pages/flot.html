@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -40,7 +42,7 @@
 
   <header class="main-header">
     <!-- Logo -->
-    <a href="http://localhost/admin" class="logo">
+    <a href="/admin" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><small>水杯子</small></span>
       <!-- logo for regular state and mobile devices -->
@@ -108,6 +110,33 @@
           </a>
         </li>
 
+
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-pie-chart"></i> <span>设备管理</span>
+            <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li ><a href="/basic/siteinfo"><i class="fa fa-circle-o"></i> 站点查询</a></li>
+            <li ><a href="/basic/addsite"><i class="fa fa-circle-o"></i> 站点添加</a></li>
+          </ul>
+        </li>
+
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-pie-chart"></i> <span>用户管理</span>
+            <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li ><a href="/basic/userinfo"><i class="fa fa-circle-o"></i> 用户查询</a></li>
+            <li ><a href="/basic/adduser"><i class="fa fa-circle-o"></i> 用户添加</a></li>
+          </ul>
+        </li>
+
         <li class="treeview">
           <a href="/basic/flot">
             <i class="fa fa-pie-chart"></i>   <span>实时数据显示</span>
@@ -127,7 +156,7 @@
           </a>
         </li>
         <!--add33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333-->
-        <li class="treeview">
+<!--        <li class="treeview">
           <a href="#">
             <i class="fa fa-pie-chart"></i>   <span>设备状态控制</span>
             <span class="pull-right-container">
@@ -138,7 +167,7 @@
             <li ><a href="#"><i class="fa fa-circle-o"></i> 运行模式</a></li>
             <li ><a href="#"><i class="fa fa-circle-o"></i> 工作时间</a></li>
           </ul>
-        </li>
+        </li>-->
         <!--add44444444444444444444444444444444444444444444444444444444444444444444-->
         <li class="treeview">
           <a href="/basic/maintain">

@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html
+        lang="zh-CN"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+       >
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -38,7 +42,7 @@
 <div class="wrapper">
   <header class="main-header">
     <!-- Logo -->
-    <a href="http://localhost/admin" class="logo">
+    <a href="/admin" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><small>水杯子</small></span>
       <!-- logo for regular state and mobile devices -->
@@ -58,13 +62,13 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="/basic/dist/img/whiteuser.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">超级管理员</span>
+              <span class="hidden-xs" th:text="${session.login_user.getIsAdmin()==1?'超级管理员':'管理员'}"></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
                 <img src="/basic/dist/img/whiteuser.jpg" class="img-circle" alt="User Image">
-                <p th:text="${session.login_user.nickname}">
+                <p th:text="${session.login_user.getUsername()}">
 
                 </p>
               </li>
@@ -106,10 +110,33 @@
           </a>
         </li>
 
+
         <li class="treeview">
-          <a href="/basic/flot">
-            <i class="fa fa-pie-chart"></i>   <span>实时数据显示</span>
+          <a href="#">
+            <i class="fa fa-pie-chart"></i> <span>设备管理</span>
+            <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                            </span>
           </a>
+          <ul class="treeview-menu">
+            <li ><a href="/basic/siteinfo"><i class="fa fa-circle-o"></i> 站点查询</a></li>
+            <li ><a  th:href="${session.login_user.getIsAdmin()==1?'/basic/addsite':'#'}"><i class="fa fa-circle-o"></i> 站点添加</a></li>
+          </ul>
+        </li>
+
+        <li class="treeview" >
+          <a href="#">
+            <i class="fa fa-pie-chart"></i> <span>用户管理</span>
+            <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li ><a href="/basic/userinfo"><i class="fa fa-circle-o"></i> 用户查询</a></li>
+            <li th:style="${session.login_user.getIsAdmin()==1?'':'display:none'}">
+              <a th:href="${session.login_user.getIsAdmin()==1?'/basic/adduser':'#'}">
+                <i class="fa fa-circle-o"></i> 用户添加</a></li>
+          </ul>
         </li>
 
         <!--add11111111111111111111111111111111111111111111111111111111111111111111111-->
@@ -125,7 +152,7 @@
           </a>
         </li>
         <!--add33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333-->
-        <li class="treeview">
+<!--        <li class="treeview">
           <a href="#">
             <i class="fa fa-pie-chart"></i>   <span>设备状态控制</span>
             <span class="pull-right-container">
@@ -136,7 +163,7 @@
             <li ><a href="#"><i class="fa fa-circle-o"></i> 运行模式</a></li>
             <li ><a href="#"><i class="fa fa-circle-o"></i> 工作时间</a></li>
           </ul>
-        </li>
+        </li>-->
         <!--add44444444444444444444444444444444444444444444444444444444444444444444-->
         <li class="treeview">
           <a href="/basic/maintain">
@@ -155,6 +182,7 @@
     </section>
 
   </aside>
+
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -162,7 +190,7 @@
         用户余额
       </h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li><a href="/admin"><i class="fa fa-dashboard"></i> 主页</a></li>
         <li><a href="#">用户余额</a></li>
       </ol>
     </section>
@@ -175,18 +203,18 @@
               <ul style="list-style: none">
                 <li style="float:left; font-size: 20px; margin-right: 120px;">
                   <i class="fa fa-users"></i>
-                  <a id="userNum" style="margin-left: 30px" title="用户总数">5154</a>
+                  <a th:text="${usernumber}" style="margin-left: 30px" title="用户总数">0</a>
                 </li>
                 <li style="float:left;font-size: 20px; margin-right: 120px;">
                   <i class="fa fa-cny"></i>
-                  <a id="moneyNum" style="margin-left: 30px" title="余额总数">251545</a>
+                  <a th:text="${remainall}" style="margin-left: 30px" title="余额总数">0</a>
                 </li>
               </ul>
-              <div class="box-tools pull-right">
+             <!-- <div class="box-tools pull-right">
                 <div class="btn-group" id="realtime2">
                   <button type="button" class="btn btn-default btn-xs">刷新</button>
                 </div>
-              </div>
+              </div>-->
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -198,6 +226,13 @@
                   <th>余额</th>
                 </tr>
                 </thead>
+                <tbody>
+                <tr th:each="prod : ${prods}">
+                  <td th:text="${prod.id}?${prod.id}:''"></td>
+                  <td th:text="${prod.nickname}?${prod.nickname}:''"></td>
+                  <td th:text="${prod.card}?${prod.card.rest}:''"></td>
+                </tr>
+                </tbody>
                 <tfoot>
                 <tr>
                   <th >用户编号</th>
@@ -246,44 +281,19 @@
 <!-- table js-->
 <script>
     $(function () {
-        var moneynum=0;
-       var table= $("#example").DataTable({
-            "processing": true,
-            "serverSide": true,
-            "ajax": {
-                url: "/usernum",
-                "dataSrc":function (data) {
-                    var userNum=$("#userNum");
-                    var moneyNum=$("#moneyNum");
-                    userNum.empty();
-                    userNum.append(
-                        data.recordsFiltered
-                    );
-                    $.each(data.data,function (index,item) {
-                        moneynum=moneynum+parseInt(item.remain);
-                    });
-                    moneyNum.empty();
-                    moneyNum.append(
-                        moneynum
-                    );
-                    moneynum=0;
-                    return data.data;
-                }
+        var table= $("#example").DataTable({
+
+            "language" :{
+                url: "/basic/js/jquery.dataTables.chinese.json"
             },
-            "columns" : [
-                {"data":"id"},
-                {"data":"nickname"},
-                {"data" : "remain"}
-            ],
             "autoWidth": true,
             "lengthChange": true,
             "searching": false,
             "ordering": false,
         });
-
-        $('#realtime2').click(function() {
-            table.ajax.reload();
-        });
+        /*$('#realtime2').click(function() {
+           aj.reload();
+        });*/
     });
 </script>
 </body>

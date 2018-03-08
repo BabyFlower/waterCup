@@ -1,12 +1,17 @@
 package com.zslin.web.controller.admin;
 
 import com.sun.org.apache.xml.internal.utils.StringToIntTable;
+import com.zslin.basic.model.User;
+import com.zslin.basic.service.IUserService;
 import com.zslin.web.model.AjaxResponceBody;
 import com.zslin.web.model.Device;
+import com.zslin.web.model.FirstLevel;
 import com.zslin.web.service.IDeviceService;
 import com.zslin.web.service.ISendsiteService;
+import com.zslin.web.service.ISiteService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.nutz.castor.castor.String2Integer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.zslin.web.model.Site;
@@ -33,35 +38,51 @@ public class SearchController {
     @Autowired
     private ISendsiteService sendsiteService;
     @Autowired
+    private IUserService userService;
+    @Autowired
+    private ISiteService siteService;
+    @Autowired
     private IDeviceService iDeviceService;
-    private Map<String,Site> data;
-    private Map<String,Device> data1;
+    private Map<String,FirstLevel> data;
+    private Map<String,FirstLevel> data1;
     @RequestMapping(value = "/sites",method= RequestMethod.GET)
     public JSONObject getAllsites(String id,String user){
-        System.out.println("s");
-         if (id.equals("0")) {
-             System.out.println("ss");
-             List<Site> list = this.sendsiteService.findAll();
-             System.out.println(list.get(1).getName());
-             data = new HashMap<String, Site>();
-             System.out.println("sss");
-             for (Site list1 : list) {
-                 System.out.println("shaha"+list1.getName());
-                 System.out.println(list1.getId() + "");
-                 list1.setUser(null);
-                 data.put(list1.getId() + "", list1);
 
+         if (id.equals("0")) {
+             User usern=this.userService.findByUsername(user);
+             if (usern.getIsAdmin()==1){
+                 //若为管理员
+                 List<Site> list = this.sendsiteService.findAll();
+                 data = new HashMap<String, FirstLevel>();
+                 for (Site list1 : list) {
+                     FirstLevel firstLevel=new FirstLevel();
+                     firstLevel.setName(list1.getName());
+                     data.put(list1.getId() + "",firstLevel);
+                 }
+                 JSONObject test = JSONObject.fromObject(data);
+                 return test;
+             }else {
+                 List<Site> list = usern.getSites();
+                 data = new HashMap<String, FirstLevel>();
+
+                 for (Site list1 : list) {
+                     FirstLevel firstLevel = new FirstLevel();
+                     firstLevel.setName(list1.getName());
+                     data.put(list1.getId() + "", firstLevel);
+                 }
+                 JSONObject test = JSONObject.fromObject(data);
+                 return test;
              }
-             System.out.println("ssss");
-             System.out.println("why"+data.get("1").getName());
-             JSONObject test = JSONObject.fromObject(data);
-             System.out.println("why???"+test.get("1").getClass().getName());
-             return test;
+
          } else {
-             List<Device> list = iDeviceService.findDeviceBySId(Integer.valueOf(id));
-             data1 = new HashMap<String, Device>();
+              Site siteid=this.siteService.findById(Integer.parseInt(id));
+//             List<Device> list = iDeviceService.findDeviceBySId(Integer.valueOf(id));
+             List<Device> list = siteid.getDevices();
+             data1 = new HashMap<String, FirstLevel>();
              for (Device list1 : list) {
-                 data1.put(list1.getD_id() + "", list1);
+                 FirstLevel firstLevel = new FirstLevel();
+                 firstLevel.setName(list1.getName());
+                 data1.put(list1.getId() + "", firstLevel);
              }
              JSONObject test = JSONObject.fromObject(data1);
              return test;

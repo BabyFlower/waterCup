@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -38,7 +41,7 @@
 
     <header class="main-header">
         <!-- Logo -->
-        <a href="http://localhost/admin" class="logo">
+        <a href="/admin" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><small>水杯子</small></span>
             <!-- logo for regular state and mobile devices -->
@@ -58,13 +61,13 @@
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <img src="/basic/dist/img/whiteuser.jpg" class="user-image" alt="User Image">
-                            <span class="hidden-xs">超级管理员</span>
+                            <span class="hidden-xs" th:text="${session.login_user.getIsAdmin()==1?'超级管理员':'管理员'}"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
                                 <img src="/basic/dist/img/whiteuser.jpg" class="img-circle" alt="User Image">
-                                <p th:text="${session.login_user.nickname}">
+                                <p th:text="${session.login_user.getUsername()}">
 
                                 </p>
                             </li>
@@ -106,10 +109,33 @@
                     </a>
                 </li>
 
+
                 <li class="treeview">
-                    <a href="/basic/flot">
-                        <i class="fa fa-pie-chart"></i>   <span>实时数据显示</span>
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i> <span>设备管理</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                            </span>
                     </a>
+                    <ul class="treeview-menu">
+                        <li ><a href="/basic/siteinfo"><i class="fa fa-circle-o"></i> 站点查询</a></li>
+                        <li ><a  th:href="${session.login_user.getIsAdmin()==1?'/basic/addsite':'#'}"><i class="fa fa-circle-o"></i> 站点添加</a></li>
+                    </ul>
+                </li>
+
+                <li class="treeview" >
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i> <span>用户管理</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li ><a href="/basic/userinfo"><i class="fa fa-circle-o"></i> 用户查询</a></li>
+                        <li th:style="${session.login_user.getIsAdmin()==1?'':'display:none'}">
+                            <a th:href="${session.login_user.getIsAdmin()==1?'/basic/adduser':'#'}">
+                                <i class="fa fa-circle-o"></i> 用户添加</a></li>
+                    </ul>
                 </li>
 
                 <!--add11111111111111111111111111111111111111111111111111111111111111111111111-->
@@ -125,7 +151,7 @@
                     </a>
                 </li>
                 <!--add33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333-->
-                <li class="treeview">
+<!--                <li class="treeview">
                     <a href="#">
                         <i class="fa fa-pie-chart"></i>   <span>设备状态控制</span>
                         <span class="pull-right-container">
@@ -136,7 +162,7 @@
                         <li ><a href="#"><i class="fa fa-circle-o"></i> 运行模式</a></li>
                         <li ><a href="#"><i class="fa fa-circle-o"></i> 工作时间</a></li>
                     </ul>
-                </li>
+                </li>-->
                 <!--add44444444444444444444444444444444444444444444444444444444444444444444-->
                 <li class="treeview">
                     <a href="/basic/maintain">
@@ -163,144 +189,246 @@
                 参数阈值设置
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+                <li><a href="/admin"><i class="fa fa-dashboard"></i> 主页</a></li>
                 <li><a href="#">参数报警</a></li>
             </ol>
         </section>
 
         <!-- Main content -->
         <section class="content">
-            <div class="center-block">
+            <div class="row">
+                <div class="col-xs-offset-2 col-xs-10">
+                    <!--                <form class="form-horizontal" role="form">
+                                        <h3>
+                                            紧急联系人设置
+                                        </h3>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">紧急联系人</label>
+                                            <div class="col-sm-10">
+                                                <p class="form-control-static">张工</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label  class="col-sm-2 control-label">联系方式</label>
+                                            <div class="col-sm-2">
+                                                <input type="tel" class="form-control " placeholder="183****5489">
+                                            </div>
+                                        </div>
+                                    </form>-->
+                    <form action="/alarm" class="form-horizontal" role="form" method="post" target="id_iframe">
+                        <h3>
+                            正常区间设置
+                        </h3>
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">PH值</label>
 
-                <form class="form-horizontal" role="form">
-                    <h3>
-                        紧急联系人设置
-                    </h3>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">紧急联系人</label>
-                        <div class="col-sm-10">
-                            <p class="form-control-static">张工</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label  class="col-sm-2 control-label">联系方式</label>
-                        <div class="col-sm-2">
-                            <input type="tel" class="form-control " placeholder="183****5489">
-                        </div>
-                    </div>
-                </form>
-                <form class="form-horizontal" role="form">
-                    <h3>
-                        正常区间设置
-                    </h3>
-                    <div class="form-group">
-                        <label  class="col-sm-2 control-label">PH值</label>
-
-                        <div class="inline">
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control"  placeholder="6.5">
-                            </div>
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control"  placeholder="8.5">
-                            </div>
-                            <div class="col-sm-1">
-                                <p class="form-control-static">PH</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label  class="col-sm-2 control-label">浊度</label>
-
-                        <div class="inline">
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control"  placeholder="0">
-                            </div>
-
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control"  placeholder="1">
-                            </div>
-                            <div class="col-sm-1">
-                                <p class="form-control-static">NTU</p>
+                            <div class="inline">
+                                <div class="col-sm-2">
+                                    <input type="text" name="phdown" class="form-control"  th:placeholder="${alarm.phdown}">
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" name="phup" class="form-control" th:placeholder="${alarm.phup}" >
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static">PH</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label  class="col-sm-2 control-label">二氧化氯</label>
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">浊度</label>
 
-                        <div class="inline">
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control"  placeholder="0">
-                            </div>
+                            <div class="inline">
+                                <div class="col-sm-2">
+                                    <input type="text" name="zddown" class="form-control"  th:placeholder="${alarm.zddown}">
+                                </div>
 
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control"  placeholder="0.8">
-                            </div>
-                            <div class="col-sm-1">
-                                <p class="form-control-static">mg/L</p>
+                                <div class="col-sm-2">
+                                    <input type="text" name="zdup" class="form-control"  th:placeholder="${alarm.zdup}">
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static">NTU</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label  class="col-sm-2 control-label">温度</label>
 
-                        <div class="inline">
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control"  placeholder="0">
-                            </div>
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">余氯</label>
 
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control"  placeholder="50">
-                            </div>
-                            <div class="col-sm-1">
-                                <p class="form-control-static">℃</p>
+                            <div class="inline">
+                                <div class="col-sm-2">
+                                    <input type="text" name="ylvdown" class="form-control"  th:placeholder="${alarm.ylvdown}">
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input type="text" name="ylvup" class="form-control"  th:placeholder="${alarm.ylvup}">
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static">mg/L</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label  class="col-sm-2 control-label">溶解氧</label>
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">供水温度</label>
 
-                        <div class="inline">
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control"  placeholder="6">
-                            </div>
+                            <div class="inline">
+                                <div class="col-sm-2">
+                                    <input type="text" name="suwddown" class="form-control"  th:placeholder="${alarm.suwddown}">
+                                </div>
 
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control"  placeholder="25">
-                            </div>
-                            <div class="col-sm-1">
-                                <p class="form-control-static">mg/L</p>
+                                <div class="col-sm-2">
+                                    <input type="text" name="suwdup" class="form-control"  th:placeholder="${alarm.suwdup}">
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static">℃</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label  class="col-sm-2 control-label">电导率</label>
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">溶解氧</label>
 
-                        <div class="inline">
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control"  placeholder="200">
-                            </div>
+                            <div class="inline">
+                                <div class="col-sm-2">
+                                    <input type="text" name="rjydown" class="form-control"  th:placeholder="${alarm.rjydown}">
+                                </div>
 
-                            <div class="col-sm-1">
-                                <input type="text" class="form-control"  placeholder="2000">
-                            </div>
-                            <div class="col-sm-1">
-                                <p class="form-control-static">us/cm</p>
+                                <div class="col-sm-2">
+                                    <input type="text" name="rjyup" class="form-control"  th:placeholder="${alarm.rjyup}">
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static">mg/L</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group pull-left">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-default">保存</button>
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">供水压力</label>
+
+                            <div class="inline">
+                                <div class="col-sm-2">
+                                    <input type="text" name="suyldown" class="form-control"  th:placeholder="${alarm.suyldown}">
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input type="text" name="suylup" class="form-control"  th:placeholder="${alarm.suylup}">
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static">Mpa</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">出水压力</label>
+
+                            <div class="inline">
+                                <div class="col-sm-2">
+                                    <input type="text"  name="jslldown" class="form-control"  th:placeholder="${alarm.jslldown}">
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input type="text" name="jsllup" class="form-control" th:placeholder="${alarm.jsllup}">
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static">Mpa</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">出水流量</label>
+
+                            <div class="inline">
+                                <div class="col-sm-2">
+                                    <input type="text" name="cslldown" class="form-control" th:placeholder="${alarm.cslldown}">
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input type="text" name="csllup" class="form-control"  th:placeholder="${alarm.csllup}">
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static">Q</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">进水TDS</label>
+
+                            <div class="inline">
+                                <div class="col-sm-2">
+                                    <input type="text" name="jstdsdown" class="form-control"  th:placeholder="${alarm.jstdsdown}">
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input type="text" name="jstdsup" class="form-control"  th:placeholder="${alarm.jstdsup}">
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static">mg/L</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">出水TDS</label>
+
+                            <div class="inline">
+                                <div class="col-sm-2">
+                                    <input type="text" name="cstdsdown" class="form-control"  th:placeholder="${alarm.cstdsdown}">
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input type="text" name="cstdsup" class="form-control"  th:placeholder="${alarm.cstdsup}">
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static">mg/L</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">进水压力</label>
+
+                            <div class="inline">
+                                <div class="col-sm-2">
+                                    <input type="text" name="yldown" class="form-control"  th:placeholder="${alarm.yldown}">
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input type="text" name="ylup" class="form-control" th:placeholder="${alarm.ylup}">
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static">Mpa</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">余臭氧</label>
+
+                            <div class="inline">
+                                <div class="col-sm-2">
+                                    <input type="text" name="ycydown" class="form-control" th:placeholder="${alarm.ycydown}">
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input type="text" name="ycyup" class="form-control"  th:placeholder="${alarm.ycyup}">
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static">mg/L</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group pull-left" th:style="${session.login_user.getIsAdmin()==1?'':'display:none'}">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button th:type="${session.login_user.getIsAdmin()==1?'submit':''}" type="submit" class="btn btn-default">保存</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
             </div>
-
-
+            <div class="row">
+                <div class="col-lg-4 col-lg-offset-4 col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4 col-xs-4 col-xs-offset-4">
+                    <div class=" alert alert-info"  style="margin-top:15px;" th:if="${errMg ne null}" role="alert" th:text="${errMg}"></div>
+                </div>
+            </div>
         </section>
         <!-- /.content -->
+
     </div>
     <footer class="main-footer">
         <div class="pull-right hidden-xs">

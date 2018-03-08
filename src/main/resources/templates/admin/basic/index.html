@@ -38,7 +38,7 @@
 
         <header class="main-header">
             <!-- Logo -->
-            <a href="http://localhost/admin" class="logo">
+            <a href="/admin" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><small>水杯子</small></span>
             <!-- logo for regular state and mobile devices -->
@@ -58,13 +58,13 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="/basic/dist/img/whiteuser.jpg" class="user-image" alt="User Image">
-                                <span class="hidden-xs">超级管理员</span>
+                                <span class="hidden-xs" th:text="${session.login_user.getIsAdmin()==1?'超级管理员':'管理员'}"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
                                     <img src="/basic/dist/img/whiteuser.jpg" class="img-circle" alt="User Image">
-                                    <p th:text="${session.login_user.nickname}">
+                                    <p th:text="${session.login_user.getUsername()}">
 
                                     </p>
                                 </li>
@@ -106,10 +106,33 @@
                         </a>
                     </li>
 
+
                     <li class="treeview">
-                        <a href="/basic/flot">
-                            <i class="fa fa-pie-chart"></i>   <span>实时数据显示</span>
+                        <a href="#">
+                            <i class="fa fa-pie-chart"></i> <span>设备管理</span>
+                            <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                            </span>
                         </a>
+                        <ul class="treeview-menu">
+                            <li ><a href="/basic/siteinfo"><i class="fa fa-circle-o"></i> 站点查询</a></li>
+                            <li ><a  th:href="${session.login_user.getIsAdmin()==1?'/basic/addsite':'#'}"><i class="fa fa-circle-o"></i> 站点添加</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="treeview" >
+                        <a href="#">
+                            <i class="fa fa-pie-chart"></i> <span>用户管理</span>
+                            <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li ><a href="/basic/userinfo"><i class="fa fa-circle-o"></i> 用户查询</a></li>
+                            <li th:style="${session.login_user.getIsAdmin()==1?'':'display:none'}">
+                                <a th:href="${session.login_user.getIsAdmin()==1?'/basic/adduser':'#'}">
+                                    <i class="fa fa-circle-o"></i> 用户添加</a></li>
+                        </ul>
                     </li>
 
                     <!--add11111111111111111111111111111111111111111111111111111111111111111111111-->
@@ -125,7 +148,7 @@
                         </a>
                     </li>
                     <!--add33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333-->
-                    <li class="treeview">
+<!--                    <li class="treeview">
                         <a href="#">
                             <i class="fa fa-pie-chart"></i>   <span>设备状态控制</span>
                             <span class="pull-right-container">
@@ -136,7 +159,7 @@
                             <li ><a href="#"><i class="fa fa-circle-o"></i> 运行模式</a></li>
                             <li ><a href="#"><i class="fa fa-circle-o"></i> 工作时间</a></li>
                         </ul>
-                    </li>
+                    </li>-->
                     <!--add44444444444444444444444444444444444444444444444444444444444444444444-->
                     <li class="treeview">
                         <a href="/basic/maintain">
@@ -161,7 +184,7 @@
             <section class="content-header">
                 <h1>&nbsp;</h1>
                 <ol class="breadcrumb">
-                    <li><a href="index.html"><i class="fa fa-dashboard"></i> 主页</a></li>
+                    <li><a href="/admin"><i class="fa fa-dashboard"></i> 主页</a></li>
                 </ol>
             </section>
 

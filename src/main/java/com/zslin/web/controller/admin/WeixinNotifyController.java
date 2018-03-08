@@ -1,10 +1,10 @@
 package com.zslin.web.controller.admin;
 
+/*import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;*/
 import com.zslin.web.model.Account;
-import com.zslin.web.service.IAccountService;
-import com.zslin.web.service.PayCommonUtil;
-import com.zslin.web.service.PayConfigUtil;
-import com.zslin.web.service.XMLUtil;
+import com.zslin.web.model.Card;
+import com.zslin.web.model.Order;
+import com.zslin.web.service.*;
 
 import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,13 @@ import java.util.*;
 public class WeixinNotifyController {
     @Autowired
     private IAccountService accountService;
+    @Autowired
+    private ICardService iCardService;
+    @Autowired
+    private IOrderService orderService;
+    private String key;
     @RequestMapping(value="/back",method= RequestMethod.POST)
-        public void weixin_notify(HttpServletRequest request, HttpServletResponse response,Model model) throws Exception{
+    public void weixin_notify(HttpServletRequest request, HttpServletResponse response,Model model) throws Exception{
 
         //读取参数
         InputStream inputStream ;
@@ -63,9 +68,15 @@ public class WeixinNotifyController {
             }
             packageParams.put(parameter, v);
         }
-
+        String trade_type = (String)packageParams.get("trade_type");
         // 账号信息
-        String key = PayConfigUtil.API_KEY; // key
+        if (trade_type.equals("APP")){
+            key= "abcdefghijklmnopqrstuvwxyznjsbz2";
+            System.out.println("appkey"+key);
+        }else {
+            key = PayConfigUtil.API_KEY; // key
+            System.out.println("webkey"+key);
+        }
         System.out.println(packageParams);
         //判断签名是否正确
         if(PayCommonUtil.isTenpaySign("UTF-8", packageParams,key)) {
@@ -87,46 +98,63 @@ public class WeixinNotifyController {
             System.out.println("total_fee:"+total_fee);
             //------------------------------
             String resXml = "";
-            if("SUCCESS".equals((String)packageParams.get("result_code"))){
-                // 这里是支付成功
-                //////////执行自己的业务逻辑////////////////
-                //////////修改数据库中的数据////////////////
-                Account user=accountService.findByEmail(attach);
-                if(user.getRemain()==null)
-                {
-                      uRemain=0+"";
-                }else
-                {
-                    uRemain=user.getRemain();
-                }
-                System.out.println("remainbeform"+uRemain);
-                float userRemain = Float.parseFloat(uRemain);
-                float userPay = Float.parseFloat(total_fee) / 100;
-                System.out.println("total_fee"+userPay);
-                float remain = userRemain + userPay;
-                String remainfinal=remain+"";
-                user.setRemain(remainfinal);
-                user.setPaymoney(userPay+"");
-                user.setPaystate("1");
-                accountService.save(user);
-                System.out.println("remainafter"+user.getRemain());
-                System.out.println("success");
-                //通知微信.异步确认成功.必写.不然会一直通知后台.八次之后就认为交易失败了.
-                resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
-                        + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
+            Order order=this.orderService.findByOrdernumber(out_trade_no);
+          if (order!=null) {
+              if ("SUCCESS".equals((String) packageParams.get("result_code"))) {
+                  // 这里是支付成功
+                  //////////执行自己的业务逻辑////////////////
+                  //////////修改数据库中的数据////////////////
+                  order.setState((String) packageParams.get("result_code"));
+                  this.orderService.save(order);
+                  Account user = order.getAccount();
+                 /* Account user = accountService.findByEmail(attach);*/
+                  if (user.getCard().getRest() == null) {
+                      uRemain = 0 + "";
+                  } else {
+                      uRemain = user.getCard().getRest().toString();
+                  }
+                  System.out.println("remainbeform" + uRemain);
+                  float userRemain = Float.parseFloat(uRemain);
+                  float userPay = Float.parseFloat(total_fee) / 100;
+                  System.out.println("total_fee" + userPay);
+                  float remain = userRemain + userPay;
+                  String remainfinal = remain + "";
+                  Card card = user.getCard();
+                  card.setRest(Float.parseFloat(remainfinal));
+                  card.setCharge(userPay);
+                  card.setPaystate("1");
+                  this.iCardService.save(card);//充值到卡
 
-            } else {
-                //支付不成功，记录金额与状态
-                Account user0=accountService.findByEmail(attach);
-                float userPay0 = Float.parseFloat(total_fee) / 100;
-                user0.setPaymoney(userPay0+"");
-                user0.setPaystate("0");
-                accountService.save(user0);
-                System.out.println("failed,information：" + packageParams.get("err_code"));
-                resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
-                        + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
+                  System.out.println("remainafter" + user.getCard().getRest());
+                  System.out.println("success");
 
-            }
+                  //通知微信.异步确认成功.必写.不然会一直通知后台.八次之后就认为交易失败了.
+                  resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
+                          + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
+
+              } else {
+                  //支付不成功，记录金额与状态
+                /*Order order=this.orderService.findByOrdernumber(out_trade_no);*/
+                  order.setState((String) packageParams.get("result_code"));
+                  this.orderService.save(order);
+                  Account user0 = order.getAccount();
+                  /*Account user0 = accountService.findByEmail(attach);*/
+                  float userPay0 = Float.parseFloat(total_fee) / 100;
+                  Card card = user0.getCard();
+                  card.setCharge(userPay0);
+                  card.setPaystate("0");
+               /* accountService.save(user0);*/
+                  this.iCardService.save(card);
+                  System.out.println("failed,information：" + packageParams.get("err_code"));
+                  resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
+                          + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
+
+              }
+          }else{
+              System.out.println("查找订单失败:"+out_trade_no+"订单状态:"+packageParams.get("result_code"));
+              resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
+                      + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
+          }
             //------------------------------
             //处理业务完毕
             //------------------------------

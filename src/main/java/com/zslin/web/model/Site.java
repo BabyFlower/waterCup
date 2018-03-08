@@ -8,6 +8,7 @@ import com.zslin.basic.model.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by Ji on 2017/3/16.
@@ -21,15 +22,14 @@ public class Site{
         @GeneratedValue(strategy = GenerationType.AUTO)
         private Integer id;
         private String sitephone;
-        private Integer s_id;
+        //private Integer s_id;
         private String name;
         private String phonenumber;
 
-
+    @OneToMany(mappedBy = "site")
+    private List<Device> devices;
 
     @ManyToOne
-    /*@JsonBackReference*/
-    @JsonIgnore
      private User user;
 
 

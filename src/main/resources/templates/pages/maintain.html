@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -38,7 +41,7 @@
 
     <header class="main-header">
         <!-- Logo -->
-        <a href="http://localhost/admin" class="logo">
+        <a href="/admin" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><small>水杯子</small></span>
             <!-- logo for regular state and mobile devices -->
@@ -58,13 +61,13 @@
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <img src="/basic/dist/img/whiteuser.jpg" class="user-image" alt="User Image">
-                            <span class="hidden-xs">超级管理员</span>
+                            <span class="hidden-xs" th:text="${session.login_user.getIsAdmin()==1?'超级管理员':'管理员'}"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
                                 <img src="/basic/dist/img/whiteuser.jpg" class="img-circle" alt="User Image">
-                                <p th:text="${session.login_user.nickname}">
+                                <p th:text="${session.login_user.getUsername()}">
 
                                 </p>
                             </li>
@@ -106,10 +109,33 @@
                     </a>
                 </li>
 
+
                 <li class="treeview">
-                    <a href="/basic/flot">
-                        <i class="fa fa-pie-chart"></i>   <span>实时数据显示</span>
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i> <span>设备管理</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                            </span>
                     </a>
+                    <ul class="treeview-menu">
+                        <li ><a href="/basic/siteinfo"><i class="fa fa-circle-o"></i> 站点查询</a></li>
+                        <li ><a  th:href="${session.login_user.getIsAdmin()==1?'/basic/addsite':'#'}"><i class="fa fa-circle-o"></i> 站点添加</a></li>
+                    </ul>
+                </li>
+
+                <li class="treeview" >
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i> <span>用户管理</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li ><a href="/basic/userinfo"><i class="fa fa-circle-o"></i> 用户查询</a></li>
+                        <li th:style="${session.login_user.getIsAdmin()==1?'':'display:none'}">
+                            <a th:href="${session.login_user.getIsAdmin()==1?'/basic/adduser':'#'}">
+                                <i class="fa fa-circle-o"></i> 用户添加</a></li>
+                    </ul>
                 </li>
 
                 <!--add11111111111111111111111111111111111111111111111111111111111111111111111-->
@@ -125,7 +151,7 @@
                     </a>
                 </li>
                 <!--add33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333-->
-                <li class="treeview">
+<!--                <li class="treeview">
                     <a href="#">
                         <i class="fa fa-pie-chart"></i>   <span>设备状态控制</span>
                         <span class="pull-right-container">
@@ -136,7 +162,7 @@
                         <li ><a href="#"><i class="fa fa-circle-o"></i> 运行模式</a></li>
                         <li ><a href="#"><i class="fa fa-circle-o"></i> 工作时间</a></li>
                     </ul>
-                </li>
+                </li>-->
                 <!--add44444444444444444444444444444444444444444444444444444444444444444444-->
                 <li class="treeview">
                     <a href="/basic/maintain">
@@ -163,76 +189,99 @@
                 维护提示
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+                <li><a href="/admin"><i class="fa fa-dashboard"></i> 主页</a></li>
                 <li><a href="#">维护提示</a></li>
             </ol>
         </section>
 
         <!-- Main content -->
         <section class="content">
-            <div style="display:block" id="tab1">
-                <ul class="tab">
-                    <li class="tab_selected" onclick="ShowImage(1, 'tab');">
-                        传感器报警
-                    </li>
-                    <li onclick="ShowImage(2, 'tab');">
-                        设备损坏
-                    </li>
-                    <li onclick="ShowImage(3, 'tab');">
-                        其他
-                    </li>
-                </ul>
-                <p>
-                    北京市 东城区 设备编号：10000 报警详情：PH值超标
-                    上海市 浦东区 设备编号：20112 报警详情：二氧化氯超标
-                </p>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">维护提示</h3>
+                        </div>
+
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="orderTable" class="table table-bordered table-condensed table-striped dataTable" width="100%">
+                                <thead>
+                                <tr >
+                                    <th>id</th>
+                                    <th>站点名</th>
+                                    <th>设备名</th>
+                                    <th>供水温度(℃)</th>
+                                    <th>供水压力(MPa)</th>
+                                    <th>出水压力(MPa)</th>
+                                    <th>进水TDS</th>
+                                    <th>出水TDS</th>
+                                    <th>PH值</th>
+                                    <th>进水压力(MPa)</th>
+                                    <th>余氯(mg/L)</th>
+                                    <th>余臭氧(mg/L)</th>
+                                    <th>浊度(NTU)</th>
+                                    <th>时间</th>
+                                    <th>查看</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="prod : ${prods}">
+                                    <td  th:text="${prod}==null?'':${prod.deviceId}"></td>
+                                    <td th:text="${prod}==null?'':${prod.sitename}"></td>
+                                    <td th:text="${prod}==null?'':${prod.devicename}"></td>
+                                    <td  th:text="${prod}==null?'':${prod.suwd}"
+                                         th:style="${prod}==null?'':(${prod.suwd}gt${alarm.suwdup}or${prod.suwd}lt${alarm.suwddown}?'color:red':'')"></td>
+                                    <td th:text="${prod}==null?'':${prod.suyl}"
+                                        th:style="${prod}==null?'':(${prod.suyl}gt${alarm.suylup}or${prod.suyl}lt${alarm.suyldown}?'color:red':'')"></td>
+                                    <td th:text="${prod}==null?'':${prod.jsll}"
+                                        th:style="${prod}==null?'':(${prod.jsll}gt${alarm.jsllup}or${prod.jsll}lt${alarm.jslldown}?'color:red':'')"></td>
+                                    <td th:text="${prod}==null?'':${prod.jstds}"
+                                        th:style="${prod}==null?'':(${prod.jstds}gt${alarm.jstdsup}or${prod.jstds}lt${alarm.jstdsdown}?'color:red':'')"></td>
+                                    <td th:text="${prod}==null?'':${prod.cstds}"
+                                        th:style="${prod}==null?'':(${prod.cstds}gt${alarm.cstdsup}or${prod.cstds}lt${alarm.cstdsdown}?'color:red':'')"></td>
+                                    <td th:text="${prod}==null?'':${prod.ph}"
+                                        th:style="${prod}==null?'':(${prod.ph}gt${alarm.phup}or${prod.ph}lt${alarm.phdown}?'color:red':'')"></td>
+                                    <td th:text="${prod}==null?'':${prod.yl}"
+                                        th:style="${prod}==null?'':(${prod.yl}gt${alarm.ylup}or${prod.yl}lt${alarm.yldown}?'color:red':'')"></td>
+                                    <td th:text="${prod}==null?'':${prod.ylv}"
+                                        th:style="${prod}==null?'':(${prod.ylv}gt${alarm.ylvup}or${prod.ylv}lt${alarm.ylvdown}?'color:red':'')"></td>
+                                    <td th:text="${prod}==null?'':${prod.ycy}"
+                                        th:style="${prod}==null?'':(${prod.ycy}gt${alarm.ycyup}or${prod.ycy}lt${alarm.ycydown}?'color:red':'')"></td>
+                                    <td th:text="${prod}==null?'':${prod.zd}"
+                                        th:style="${prod}==null?'':(${prod.zd}gt${alarm.zdup}or${prod.zd}lt${alarm.zddown}?'color:red':'')"></td>
+                                    <td th:text="${prod}==null?'':${prod.sentem}"></td>
+                                    <td  ><button class="btn btn-primary" th:text="${prod.deviceId!=null}?'详细情况':''"
+                                                th:style="${prod.deviceId!=null}?'':'display:none'"></button> </td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>id</th>
+                                    <th>站点名</th>
+                                    <th>设备名</th>
+                                    <th>供水温度(℃)</th>
+                                    <th>供水压力(MPa)</th>
+                                    <th>出水压力(MPa)</th>
+                                    <th>进水TDS</th>
+                                    <th>出水TDS</th>
+                                    <th>PH值</th>
+                                    <th>进水压力(MPa)</th>
+                                    <th>余氯(mg/L)</th>
+                                    <th>余臭氧(mg/L)</th>
+                                    <th>浊度(NTU)</th>
+                                    <th>时间</th>
+                                    <th>查看</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
             </div>
-
-            <div style="display:none" id="tab2">
-                <ul class="tab">
-                    <li onclick="ShowImage(1, 'tab');">
-                        传感器报警
-                    </li>
-                    <li class="tab_selected" onclick="ShowImage(2, 'tab');">
-                        设备损坏
-                    </li>
-                    <li onclick="ShowImage(3, 'tab');">
-                        其他
-                    </li>
-                </ul>
-                <p>
-
-                </p>
-
-            </div>
-
-            <div style="display:none" id="tab3">
-                <ul class="tab">
-                    <li onclick="ShowImage(1, 'tab');">
-                        传感器报警
-                    </li>
-                    <li onclick="ShowImage(2, 'tab');">
-                        设备损坏
-                    </li>
-                    <li class="tab_selected" onclick="ShowImage(3, 'tab');">
-                        其他
-                    </li>
-                </ul>
-
-            </div>
-            <script>
-                    function ShowImage(page, tag) {
-                        var i = 1;
-                        var el;
-                        while (el = document.getElementById(tag + i)) {
-                            if (i == page)
-                                el.style.display = 'block';
-                            else
-                                el.style.display = 'none';
-                            i++;
-                        }
-                    }
-            </script>
         </section>
         <!-- /.content -->
     </div>
@@ -262,5 +311,35 @@
 <!-- drop dowm -->
 <script src="/basic/js/comm.js"></script>
 <script src="/basic/js/linkagesel-min.js"></script>
+
+<script>
+    function renderOrderDetailLink(data, type, row) {
+
+        return '<a href="/basic/maintaininfo?deviceId=' + row[0]+ '">' + data + '</a>';
+    }
+    $(document).ready(function() {
+
+        var table = $("#orderTable").DataTable({
+            "sScrollX":1200,
+            "ordering" : false,
+            "language": {
+                url: "/basic/js/jquery.dataTables.chinese.json"
+            },
+            "searching": false,
+            "lengthChange":false,
+            "columnDefs": [
+                {
+                    visible: false,
+                    targets: 0
+                },
+                {
+                    render: renderOrderDetailLink,
+                    targets: 14
+                }
+            ]
+        });
+
+    });
+</script>
 </body>
 </html>

@@ -12,13 +12,13 @@ import java.util.List;
  */
 public interface ISendsiteService  extends JpaRepository<Site,Integer> {
     /*查找同一字段*/
-    @Query("FROM  Site sd where sd.s_id>=:sid")
+   /* @Query("FROM  Site sd where sd.s_id>=:sid")
    // List<Site> find(@Param("sid") Integer sid);
-    Site find(@Param("sid") Integer sid);
-
+    Site find(@Param("sid") Integer sid);*/
+/*
     @Query("FROM  Site sd where sd.s_id>=:sid")
         // List<Site> find(@Param("sid") Integer sid);
-    List<Site> findBy(@Param("sid") Integer sid);
+    List<Site> findBy(@Param("sid") Integer sid);*/
 
     @Query("FROM Site")
     List<Site> findAll();

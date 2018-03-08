@@ -5,8 +5,12 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.demo.trade.config.Configs;
 import com.zslin.web.model.Account;
+import com.zslin.web.model.Card;
+import com.zslin.web.model.Order;
 import com.zslin.web.service.IAccountService;
 
+import com.zslin.web.service.ICardService;
+import com.zslin.web.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +30,10 @@ import java.util.*;
 public class ZhifubaoNotifyController {
     @Autowired
     private IAccountService accountService;
+    @Autowired
+    private ICardService iCardService;
+    @Autowired
+    private IOrderService orderService;
 
     @RequestMapping(value = "/back", method = RequestMethod.POST)
     public String zhifubao_notify(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
@@ -40,8 +48,9 @@ public class ZhifubaoNotifyController {
             params.put(parameterName, request.getParameter(parameterName));
         }
         boolean signVerified;
+
         try {
-            signVerified = AlipaySignature.rsaCheckV1(params, Configs.getAlipayPublicKey(), "UTF-8");
+            signVerified = AlipaySignature.rsaCheckV1(params, Configs.getAlipayPublicKey(), "UTF-8","RSA2");
         } catch (AlipayApiException e) {
             e.printStackTrace();
             return "failed";
@@ -65,39 +74,59 @@ public class ZhifubaoNotifyController {
             System.out.println("username"+username);
             System.out.println("total_amount:"+total_amount);
             //------------------------------
-
+            Order order=this.orderService.findByOrdernumber(outtradeno);
             String status = params.get("trade_status");
-            if (status.equals("TRADE_SUCCESS")) { //如果状态是成功
-                //////////修改数据库中的数据////////////////
-                Account user=accountService.findByNickname(username);
-                if(user.getRemain()==null)
-                {
-                    uRemain=0+"";
-                }else
-                {
-                    uRemain=user.getRemain();
-                }
-                System.out.println("remainbeform"+uRemain);
-                float userRemain = Float.parseFloat(uRemain);
-                float userPay = Float.parseFloat(total_amount);
-                System.out.println("total_amount"+userPay);
-                float remain = userRemain + userPay;
-                String remainfinal=remain+"";
-                user.setRemain(remainfinal);
-                user.setPaymoney(userPay+"");
-                user.setPaystate("1");
-                accountService.save(user);
-                System.out.println("remainafter"+user.getRemain());
-                System.out.println("success");
-            } else {
-                //支付不成功，记录金额与状态
-                Account user0=accountService.findByNickname(username);
-                float userPay0 = Float.parseFloat(total_amount);
-                user0.setPaymoney(userPay0+"");
-                user0.setPaystate("0");
-                accountService.save(user0);
-                System.out.println("failed,information：" + status);
-            }
+          if (order!=null) {
+              if (status.equals("TRADE_SUCCESS")) { //如果状态是成功
+                  //////////修改数据库中的数据////////////////
+              /*  Order order=this.orderService.findByOrdernumber(outtradeno);*/
+                  order.setState(status);
+                  this.orderService.save(order);
+                  Account user = order.getAccount();
+                /*Account user=accountService.findByEmail(username);*/
+                  if (user.getCard().getRest() == null) {
+                      uRemain = 0 + "";
+                  } else {
+                      uRemain = user.getCard().getRest().toString();
+                  }
+                  System.out.println("remainbeform" + uRemain);
+                  float userRemain = Float.parseFloat(uRemain);
+                  float userPay = Float.parseFloat(total_amount);
+                  System.out.println("total_amount" + userPay);
+                  float remain = userRemain + userPay;
+                  String remainfinal = remain + "";
+                  Card card = user.getCard();
+                  card.setRest(Float.parseFloat(remainfinal));
+                  card.setCharge(userPay);
+                  card.setPaystate("1");
+                  this.iCardService.save(card);
+                  System.out.println("success");
+              } else if (status.equals("WAIT_BUYER_PAY")) {
+               /* Order order=this.orderService.findByOrdernumber(outtradeno);*/
+                  order.setState(status);
+                  this.orderService.save(order);
+                  System.out.println("waitpay");
+                  return "failed";
+              } else {
+                  //支付不成功，记录金额与状态
+                /*Order order=this.orderService.findByOrdernumber(outtradeno);*/
+                  order.setState(status);
+                  this.orderService.save(order);
+                  Account user0 = order.getAccount();
+                /*Account user0=accountService.findByEmail(username);*/
+                  float userPay0 = Float.parseFloat(total_amount);
+                  Card card = user0.getCard();
+                  card.setCharge(userPay0);
+                  card.setPaystate("0");
+                  this.iCardService.save(card);
+                  System.out.println("failed,information：" + status);
+                  return "failed";
+              }
+          }else{
+              System.out.println("查找订单失败"+outtradeno+"订单状态"+status);
+              return "failed";
+          }
+
         } else { //如果验证签名没有通过
             return "failed";
         }

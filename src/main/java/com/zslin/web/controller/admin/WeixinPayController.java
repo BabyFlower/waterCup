@@ -10,12 +10,16 @@ import com.alipay.demo.trade.model.builder.AlipayTradePrecreateRequestBuilder;
 import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
 import com.alipay.demo.trade.service.AlipayTradeService;
 import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
+import com.zslin.web.model.Account;
+import com.zslin.web.model.Order;
 import com.zslin.web.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -30,6 +34,10 @@ public class WeixinPayController {
     @Autowired
     // 支付宝当面付2.0服务
     private static AlipayTradeService tradeService;
+    @Autowired
+    private IAccountService accountService;
+    @Autowired
+    private IOrderService orderService;
 
     @RequestMapping(value="/call",method= RequestMethod.POST)
     public String weixin_pay(@RequestParam String money,@RequestParam String method,@RequestParam String username,@RequestParam String input) throws Exception {
@@ -44,7 +52,11 @@ public class WeixinPayController {
                 e.printStackTrace();
             }
         }
-        System.out.println(money);
+        long time=new Date().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //格式化当前日期
+        String sdate = sdf.format(time);
+
         //微信支付
         if(method.equals("weixin")){
         // 账号信息
@@ -61,9 +73,8 @@ public class WeixinPayController {
         String order_price = money; // 价格   注意：价格的单位是分
         String body = "水杯子充值卡";   // 商品名称
         String out_trade_no ; // 订单号
-        long time=new Date().getTime();
         out_trade_no=time+"";
-        String attach= username; //附加信息，存在用户名
+        String attach= ""; //附加信息，存在用户名
         // 获取发起电脑 ip
         String spbill_create_ip = PayConfigUtil.CREATE_IP;
         // 回调接口
@@ -89,7 +100,19 @@ public class WeixinPayController {
 
         String resXml = HttpUtil.postData(PayConfigUtil.UFDODER_URL, requestXML);
         Map map = XMLUtil.doXMLParse(resXml);
-        //String return_code = (String) map.get("return_code");
+        String return_code = (String) map.get("return_code");
+        String result_code= (String) map.get("result_code");
+        if (return_code.equals("SUCCESS")&&result_code.equals("SUCCESS")){
+           Account account=this.accountService.findByEmail(username);
+            Order order=new Order();
+            order.setAccount(account);
+            order.setFee(order_price);
+            order.setOrdernumber(out_trade_no);
+            order.setTime(sdate);
+            order.setState("OrderSuccess");
+            order.setPaymethod("weixin");
+            this.orderService.save(order);
+        }
         //String prepay_id = (String) map.get("prepay_id");
         String urlCode = (String) map.get("code_url");
         return urlCode;
@@ -105,7 +128,7 @@ public class WeixinPayController {
                     + (long) (Math.random() * 10000000L);
 
             // (必填) 订单标题，粗略描述用户的支付目的。如“xxx品牌xxx门店当面付扫码消费”
-            String subject = "南京水杯子公司充值卡";
+            String subject = "南京水杯子水卡充值";
 
             // (必填) 订单总金额，单位为元，不能超过1亿元
             // 如果同时传入了【打折金额】,【不可打折金额】,【订单总金额】三者,则必须满足如下条件:【订单总金额】=【打折金额】+【不可打折金额】
@@ -123,8 +146,8 @@ public class WeixinPayController {
             // 如果该字段为空，则默认为与支付宝签约的商户的PID，也就是appid对应的PID
             String sellerId = "";
 
-            // 订单描述显示用户名
-            String body = username;
+            // 订单描述
+            String body = "";
 
             // 商户操作员编号，添加此参数可以为商户操作员做销售统计
             String operatorId = "test_operator_id";
@@ -134,7 +157,7 @@ public class WeixinPayController {
 
             // 业务扩展参数，目前可添加由支付宝分配的系统商编号(通过setSysServiceProviderId方法)，详情请咨询支付宝技术支持
             ExtendParams extendParams = new ExtendParams();
-            extendParams.setSysServiceProviderId("2088102169714672");
+            extendParams.setSysServiceProviderId("2088521468950893");
 
             // 支付超时，定义为120分钟
             String timeoutExpress = "120m";
@@ -145,14 +168,22 @@ public class WeixinPayController {
                     .setUndiscountableAmount(undiscountableAmount).setSellerId(sellerId).setBody(body)
                     .setOperatorId(operatorId).setStoreId(storeId).setExtendParams(extendParams)
                     .setTimeoutExpress(timeoutExpress)
-                    .setNotifyUrl("http://122.112.224.166:8090/zhifubao/back");//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
+                    .setNotifyUrl("http://106.14.149.28:8090/zhifubao/back");//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
 
 
             AlipayF2FPrecreateResult result = tradeService.tradePrecreate(builder);
             switch (result.getTradeStatus()) {
                 case SUCCESS:
                     System.out.println("支付宝预下单成功: )");
-
+                    Account account=this.accountService.findByEmail(username);
+                    Order order=new Order();
+                    order.setAccount(account);
+                    order.setFee(money);
+                    order.setOrdernumber(outTradeNo);
+                    order.setTime(sdate);
+                    order.setState("OrderSuccess");
+                    order.setPaymethod("zhifubao");
+                    this.orderService.save(order);
                     AlipayTradePrecreateResponse response = result.getResponse();
                     return   response.getQrCode(); //返回给客户端二维码
 
@@ -176,29 +207,3 @@ public class WeixinPayController {
 
 }
 
-/*
-public class WeixinPayController {
-    @Autowired
-    private IAccountService accountService;
-
-    @RequestMapping(value = "/call", method = RequestMethod.POST)
-    public String weixin_pay(Model model, @RequestParam String money, @RequestParam String method, @RequestParam String username) throws Exception {
-        Account user = accountService.findByNickname(username);
-        String uRemain;
-        if (user.getRemain() == null) {
-            uRemain = 0 + "";
-        } else {
-            uRemain = user.getRemain();
-        }
-        System.out.println("remainbeform" + uRemain);
-        float userRemain = Float.parseFloat(uRemain);
-        float userPay = Float.parseFloat(money) / 100;
-        float remain = userRemain + userPay;
-        String remainfinal = remain + "";
-        user.setRemain(remainfinal);
-        accountService.save(user);
-        System.out.println("remainafter" + user.getRemain());
-        System.out.println("success");
-        return user.getRemain();
-    }
-}*/
